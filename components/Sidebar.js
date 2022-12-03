@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
+import { episodeIdState } from "../atoms/episodeAtom";
 import { spotifyIdState } from "../atoms/userAtom";
 import useSpotify from "../hooks/useSpotify";
 
@@ -19,6 +20,7 @@ function Sidebar() {
   console.log(session.user.accessToken);
   const [playlists, setPlaylists] = useState([]);
   const [episodes, setEpisodes] = useState([]);
+  const [episodeId, setEpisodeId] = useRecoilState(episodeIdState);
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
   const [spotifyId, setSpotifyId] = useRecoilState(spotifyIdState);
 
@@ -81,7 +83,9 @@ function Sidebar() {
 
       console.log("episodes: ", items);
       setEpisodes(items);
+      console.log(episodes);
     };
+
     handler();
     // =======================================================================================
     // =======================================================================================
@@ -133,8 +137,10 @@ function Sidebar() {
         {/* Podcasts... */}
         {episodes.map((episode) => (
           <p
-            key={episode.id}
-            // onClick={() => setEpisodeId(episode.id)}
+            key={episode.episode.id}
+            onClick={() => {
+              setEpisodeId(episode.episode.id);
+            }}
             className="cursor-pointer hover:text-white"
           >
             {episode.episode.name}

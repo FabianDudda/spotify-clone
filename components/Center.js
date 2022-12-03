@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { shuffle } from "lodash";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { playlistState, playlistIdState } from "../atoms/playlistAtom";
+import { episodeIdState } from "../atoms/episodeAtom";
 import useSpotify from "../hooks/useSpotify";
 import Songs from "./Songs";
 import { signOut } from "next-auth/react";
@@ -27,6 +28,7 @@ function Center() {
   const [color, setColor] = useState(null);
   const [playlist, setPlaylist] = useRecoilState(playlistState);
   const playlistId = useRecoilValue(playlistIdState);
+  const episodeId = useRecoilValue(episodeIdState);
 
   const [isActive, setActive] = useState("false");
 
@@ -34,14 +36,25 @@ function Center() {
     setColor(shuffle(colors).pop());
   }, [playlistId]);
 
+  // Playlists
+  // useEffect(() => {
+  //   spotifyApi
+  //     .getPlaylist(playlistId)
+  //     .then((data) => {
+  //       setPlaylist(data.body);
+  //     })
+  //     .catch((err) => console.log("Something went wrong!", err));
+  // }, [spotifyApi, playlistId]);
+
+  // Episodes
   useEffect(() => {
     spotifyApi
-      .getPlaylist(playlistId)
+      .getEpisode(episodeId)
       .then((data) => {
         setPlaylist(data.body);
       })
       .catch((err) => console.log("Something went wrong!", err));
-  }, [spotifyApi, playlistId]);
+  }, [spotifyApi, episodeId]);
 
   // console.log(playlist);
 
@@ -95,9 +108,7 @@ function Center() {
         </div>
       </section>
 
-      <div>
-        <Songs />
-      </div>
+      <div>{/* <Songs /> */}</div>
     </div>
   );
 }
