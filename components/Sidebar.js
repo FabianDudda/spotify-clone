@@ -10,6 +10,7 @@ import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { playlistIdState } from "../atoms/playlistAtom";
+import { spotifyIdState } from "../atoms/userAtom";
 import useSpotify from "../hooks/useSpotify";
 
 function Sidebar() {
@@ -19,6 +20,7 @@ function Sidebar() {
   const [playlists, setPlaylists] = useState([]);
   const [episodes, setEpisodes] = useState([]);
   const [playlistId, setPlaylistId] = useRecoilState(playlistIdState);
+  const [spotifyId, setSpotifyId] = useRecoilState(spotifyIdState);
 
   // console.log(playlists);
   // console.log(playlistId);
@@ -32,6 +34,12 @@ function Sidebar() {
       spotifyApi.getUserPlaylists().then((data) => {
         setPlaylists(data.body.items);
         console.log("playlists: ", data.body.items);
+      });
+
+      // Save user's spotifyId in RecoilState
+      spotifyApi.getMe().then((data) => {
+        console.log("user spotifyId: ", data.body.id);
+        setSpotifyId(data.body.id);
       });
 
       // Saved podcasts

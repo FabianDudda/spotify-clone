@@ -25,6 +25,11 @@ export async function middleware(req) {
     return NextResponse.next();
   }
 
+  // Allow the requests if its a request for /api/comments
+  if (pathname.includes("/api/comments")) {
+    return NextResponse.next();
+  }
+
   // Redirect them to login if they dont have token AND are requesting a protected route
   if (!token && pathname !== "/login") {
     url.pathname = "/login";
